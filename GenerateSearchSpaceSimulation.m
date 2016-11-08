@@ -5,7 +5,7 @@ load full_tree_onelayer.mat
 load ./Environment/obstacle_in_curve.mat
 %load ./Environment/obstacle_in_straight.mat
 figSim=figure('NumberTitle','off','Name','Simulation');
-%figCur=figure('NumberTitle','off','Name','Curvature');
+figCur=figure('NumberTitle','off','Name','Curvature');
 
 %%%%%%%Function GenerateUniformBoundaryStates() Parameter%%%%%%%%%%%%%%%%
 l_heading=0;%the parameter could be tested by the perception system
@@ -89,7 +89,7 @@ while(1)
 end
 
  FigureImprovement(figSim);
-  % FigureImprovement(figCur);
+ FigureImprovement(figCur);
 
 
 

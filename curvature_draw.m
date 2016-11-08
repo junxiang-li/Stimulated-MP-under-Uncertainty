@@ -25,7 +25,7 @@ for i=1:number
     k_temp(i)=k_curve(i*10);
 end
 figure(figCur);
-%plot(x_temp,k_temp,'b','Linewidth',1.5);hold on;
+plot(x_temp,k_temp,'b','Linewidth',1.5);hold on;
 figure(figSim);
 plot(x_temp,y_temp,'r','Linewidth',1.5);hold on;
 
