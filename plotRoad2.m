@@ -1,6 +1,6 @@
 function [referencepath_xy] = plotRoad2(figSim)
 % This environment depicts only having the straightline in the scene. 
-% ,figCur%@@@@@
+% 
 global l_width
 l_width=6;
 
@@ -42,7 +42,7 @@ temp1=[x;y;theta;kappa];
 % temp5=[x;y;theta;kappa];
 
 referencepath_xy=[temp1];%,temp5
-plot(referencepath_xy(1,:),referencepath_xy(2,:),'b-.');
+plot(referencepath_xy(1,:),referencepath_xy(2,:),'b-.');hold on;
 axis equal;
 %figure(figCur);%@@@@@
 %plot(referencepath_xy(1,:),referencepath_xy(4,:),'b');hold on;

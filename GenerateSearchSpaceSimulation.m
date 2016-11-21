@@ -1,3 +1,19 @@
+% -------------------------------------------------------------------------
+%
+% File : Optimization-based Motion Planner With Uncertainty.m
+%
+% Discription : Mobile Robot Motion Planning with Optimization-based
+% Approach considering with prediction and uncertainty
+%
+% Environment : Matlab
+%
+% Author : John Lee
+%
+% Copyright (c): 2016 John Lee
+%
+% License : Modified BSD Software License Agreement
+% -------------------------------------------------------------------------
+
 clc;clear;
 global number
 global l_width
@@ -6,6 +22,7 @@ load ./Environment/obstacle_in_curve.mat
 %load ./Environment/obstacle_in_straight.mat
 figSim=figure('NumberTitle','off','Name','Simulation');
 figCur=figure('NumberTitle','off','Name','Curvature');
+figure(figSim);
 
 %%%%%%%Function GenerateUniformBoundaryStates() Parameter%%%%%%%%%%%%%%%%
 l_heading=0;%the parameter could be tested by the perception system
@@ -22,34 +39,27 @@ LookUpTable=lookup_table;
 
 %%%%%%Function ComputeTrajectoryCost() Parameter%%%%%%%%%%%%%%%%
 number=50;
-
-obstaclematrix=obstaclematrix;
-
-figure(figSim);
-
-plotvehiclerectangle([49.3,5],1,0.5,1,'y');hold on;
-plotvehiclerectangle([52.5,17],0.8,0.5,1,'y');
-
-% n=length(obstaclematrix);
-% for i=1:n
-%     plotvehiclerectangle([obstaclematrix(i,1),obstaclematrix(i,2)],0,0.5,1,'w');hold on;
-% end
-
-%plot(obstaclematrix(:,1),obstaclematrix(:,2),'o');hold on;
-
 Cost=1;
-FinalPose=[30,0,0,0];%;
+FinalPose=[30,0,0,0];
 endflag=0;%0 means normal,1 means stop!
 times=1;
+
+%%%%%%%%%%% Plot Obstacles %%%%%%%%%%%%%%%%
+obstaclematrix=obstaclematrix;
+% n=length(obstaclematrix);
+% for i=1:n
+     %plotvehiclerectangle([obstacle(i,1),obstacle(i,2)],0,0.5,1,'y');hold on;%straightline
+     %plotvehiclerectangle([obstacle(i,1),obstacle(i,2)],1,0.5,1,'y');hold on;%curve
+% end
+plotvehiclerectangle([49.3,5],1,0.5,1,'y');hold on;
+plotvehiclerectangle([52.5,17],0.8,0.5,1,'y');
 
 %%%%%%%%%%%%%%%%% Display the Environment %%%%%%%%%%%%%%%%
 %referencepath_xy=plotRoad2(figSim);%straightline
 referencepath_xy=plotRoad3(figSim);%curveline
-%%%%%%%%%%%%%%%% Download the ReferencePath %%%%%%%%%%%%%%
-%referencepath_xy=plotReferencepath();
+
 
 %trajectory_curve_draw(U(:,finalparameterindex),XInitial);
-
 figure(figSim);
 %%%%%%%%%%%%%%%%% Motion Planning Algorithm %%%%%%%%%%%%%%%%
 while(1)

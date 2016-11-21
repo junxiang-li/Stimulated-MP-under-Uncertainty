@@ -1,4 +1,5 @@
 function [referencepath_xy] = plotRoad3(figSim)
+% % This environment depicts only having the curveRoad in the scene. 
 % Every 10 meters has 100 points
 % ,figCur%@@@@@%
 global l_width
@@ -9,7 +10,6 @@ l_width=6;
 firstLineEndX=40;
 firstLineY=l_width/2;
 secLineEndX=20;
-
 
 radius_outer=[12 12+l_width];
 radius_inner=[radius_outer(1)-l_width 12];
