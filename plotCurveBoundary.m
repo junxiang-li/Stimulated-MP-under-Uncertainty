@@ -53,9 +53,10 @@ boundaryobstacle=[boundaryobstacle;[temp1,temp2]];
 temp1=[30:0.01:firstLineEndX]';
 temp2=firstLineY*ones(size([30:0.01:firstLineEndX]',1),1);
 boundaryobstacle=[boundaryobstacle;[temp1,temp2]];
-
+theta=-pi/2:pi/100:0;
 boundaryobstacle=[boundaryobstacle;[[circlecenter(1,1)+radius_inner(1)*cos(theta)]',[circlecenter(1,2)+radius_inner(1)*sin(theta)]']];
 boundaryobstacle=[boundaryobstacle;[[circlecenter(1,1)+radius_outer(1)*cos(theta)]',[circlecenter(1,2)+radius_outer(1)*sin(theta)]']];
+theta=pi:-pi/100:pi/2;
 boundaryobstacle=[boundaryobstacle;[[circlecenter(2,1)+radius_inner(2)*cos(theta)]',[circlecenter(2,2)+radius_inner(2)*sin(theta)]']];
 boundaryobstacle=[boundaryobstacle;[[circlecenter(2,1)+radius_outer(2)*cos(theta)]',[circlecenter(2,2)+radius_outer(2)*sin(theta)]']];
 

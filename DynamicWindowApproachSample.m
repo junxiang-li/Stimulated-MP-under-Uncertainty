@@ -29,7 +29,7 @@ for i=1:n
     %straightline
     %      plotvehiclerectangle([obstacle(i,1),obstacle(i,2)],0,0.5,1,'y');hold on;
     %curve
-    plotvehiclerectangle([obstacle(i,1),obstacle(i,2)],1,0.5,1,'y');hold on;
+    plotvehiclerectangle([obstacle(i,1),obstacle(i,2)],1,0.25,0.5,'y');hold on;
 end
 %curve
 % plotvehiclerectangle([49.3,5],1,0.5,1,'y');hold on;
@@ -43,15 +43,15 @@ obstacle=[obstacle;boundary_xy];
 disp('Dynamic Window Approach sample program start!!')
 
 
-%% æœºå™¨äººè¿åŠ¨å­¦æ¨¡å‹
-% æœ€é«˜é€Ÿåº¦[m/s],æœ€é«˜æ—‹è½¬é€Ÿåº¦[rad/s],åŠ é€Ÿåº¦[m/ss],æ—‹è½¬åŠ é€Ÿåº¦[rad/ss],
-% é€Ÿåº¦åˆ†è¾¨ç‡[m/s],è½¬é€Ÿåˆ†è¾¨ç‡[rad/s]
-Kinematic=[10.0,toRadian(20.0),6,toRadian(50.0),1,toRadian(1.0)];
+%% »úÆ÷ÈËÔË¶¯Ñ§Ä£ĞÍ
+% ×î¸ßËÙ¶È[m/s],×î¸ßĞı×ªËÙ¶È[rad/s],¼ÓËÙ¶È[m/ss],Ğı×ª¼ÓËÙ¶È[rad/ss],
+% ËÙ¶È·Ö±æÂÊ[m/s],×ªËÙ·Ö±æÂÊ[rad/s]
+Kinematic=[10.0,toRadian(30.0),6,toRadian(20.0),0.5,toRadian(1)];
 
-x=[30 0 0 2 0]';% æœºå™¨äººçš„åˆæœŸçŠ¶æ€[x(m),y(m),yaw(Rad),v(m/s),w(rad/s)]
-goal=[60,22];% ç›®æ ‡ç‚¹ä½ç½® [x(m),y(m)]
-obstacleR=1;%0.5;% å†²çªåˆ¤å®šç”¨çš„éšœç¢ç‰©åŠå¾„
-global dt; dt=0.1;% æ—¶é—´[s]
+x=[35 0 0 2 0]';% »úÆ÷ÈËµÄ³õÆÚ×´Ì¬[x(m),y(m),yaw(Rad),v(m/s),w(rad/s)]
+goal=[60,22];% Ä¿±êµãÎ»ÖÃ [x(m),y(m)]
+obstacleR=0.5;%0.5;% ³åÍ»ÅĞ¶¨ÓÃµÄÕÏ°­Îï°ë¾¶
+global dt; dt=0.1;% Ê±¼ä[s]
 A = [1 0 0 0 0
     0 1 0 0 0
     0 0 1 0 0
@@ -65,52 +65,48 @@ B = [dt*cos(x(3)) 0
 C =[1 0 0 0 0
     0 1 0 0 0];
 x_predict(:,1)=x;
-P_update(:,:,1)=ones(5);%åˆå§‹æœ€ä¼˜åŒ–ä¼°è®¡åæ–¹å·®
+P_update(:,:,1)=ones(5);%³õÊ¼×îÓÅ»¯¹À¼ÆĞ­·½²î
 H=[1 0 0 0 0
     0 1 0 0 0];
 
-%% è¯„ä»·å‡½æ•°å‚æ•° [heading,dist,velocity,predictDT]
+%% ÆÀ¼Ûº¯Êı²ÎÊı [heading,dist,velocity,predictDT]
 evalParam=[0.05,0.2,0.1,3.0];
-%area=[30 60 -15 15];% æ¨¡æ‹ŸåŒºåŸŸèŒƒå›´ [xmin xmax ymin ymax]
+%area=[30 60 -15 15];% Ä£ÄâÇøÓò·¶Î§ [xmin xmax ymin ymax]
 
-%% æ¨¡æ‹Ÿå®éªŒçš„ç»“æœ
+%% Ä£ÄâÊµÑéµÄ½á¹û
 result.x=[];
 tic;
 movcount=0;
 
 %% Main loop
 for i=2:5000
-    % DWAå‚æ•°è¾“å…¥
+    % DWA²ÎÊıÊäÈë
     [u,traj]=DynamicWindowApproach(x,Kinematic,goal,evalParam,obstacle,obstacleR);
     
     %% Use Kalman Filter to predict the state of robotic%%%%%%%%%%%%%%%%%%%%
-    z(:,i)=C*x+rand(); %ObservationEquation
-    %     w=randn; %äº§ç”Ÿä¸€ä¸ª1Ã—Nçš„è¡Œå‘é‡ï¼Œç¬¬ä¸€ä¸ªæ•°ä¸º0ï¼Œwä¸ºè¿‡ç¨‹å™ªå£°ï¼ˆå…¶å’Œåè¾¹çš„våœ¨å¡å°”æ›¼ç†è®ºé‡Œå‡ä¸ºé«˜æ–¯ç™½å™ªå£°ï¼‰
-    %     Q=var(w); % Rã€Qåˆ†åˆ«ä¸ºè¿‡ç¨‹å™ªå£°å’Œæµ‹é‡å™ªå£°çš„åæ–¹å·®(æ­¤æ–¹ç¨‹çš„çŠ¶æ€åªæœ‰ä¸€ç»´ï¼Œæ–¹å·®ä¸åæ–¹å·®ç›¸åŒ)
+    z(:,i)=C*x+randn();%normrnd(0,1); %ObservationEquation
+    Q=sqrt(0.1) * randn(5);
+    R=sqrt(0.1) * randn(2);
+    %-----1. Ô¤²â-----
+    %-----1.1 Ô¤²â×´Ì¬-----
+    x_predict(:,i)=f(x,u);% »úÆ÷ÈËÒÆ¶¯µ½ÏÂÒ»¸öÊ±¿Ì
+    %-----1.2 Ô¤²âÎó²îĞ­·½²î-----
+    P_predict(:,:,i)=A*P_update(:,:,i-1)*A'+Q;%p1ÎªÒ»²½¹À¼ÆµÄĞ­·½²î£¬´ËÊ½´Ót-1Ê±¿Ì×îÓÅ»¯¹À¼ÆsµÄĞ­·½²îµÃµ½t-1Ê±¿Ìµ½tÊ±¿ÌÒ»²½¹À¼ÆµÄĞ­·½²î
     
-    %     v=randn;%æµ‹é‡å™ªå£°
-    %     R=var(v);
-    Q=rand(5,5);
-    R=rand(2,2);
-    %-----1. é¢„æµ‹-----
-    %-----1.1 é¢„æµ‹çŠ¶æ€-----
-    x_predict(:,i)=f(x,u);% æœºå™¨äººç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªæ—¶åˆ»
-    %-----1.2 é¢„æµ‹è¯¯å·®åæ–¹å·®-----
-    P_predict(:,:,i)=A*P_update(:,:,i-1)*A'+Q;%p1ä¸ºä¸€æ­¥ä¼°è®¡çš„åæ–¹å·®ï¼Œæ­¤å¼ä»t-1æ—¶åˆ»æœ€ä¼˜åŒ–ä¼°è®¡sçš„åæ–¹å·®å¾—åˆ°t-1æ—¶åˆ»åˆ°tæ—¶åˆ»ä¸€æ­¥ä¼°è®¡çš„åæ–¹å·®
+    %-----2. ¸üĞÂ-----
+    %-----2.1 ¼ÆËã¿¨¶ûÂüÔöÒæ-----
+    K(:,:,i)=P_predict(:,:,i)*H' / (H*P_predict(:,:,i)*H'+R);%K(t)Îª¿¨¶ûÂüÔöÒæ£¬ÆäÒâÒå±íÊ¾Îª×´Ì¬Îó²îµÄĞ­·½²îÓëÁ¿²âÎó²îµÄĞ­·½²îÖ®±È(¸öÈË¼û½â)
+    %-----2.2 ¸üĞÂ×´Ì¬-----
+    x_update(:,i)=x_predict(:,i)  +  K(:,:,i) * (z(:,i)-H*x_predict(:,i));%Y(t)-a*c*s(t-1)³ÆÖ®ÎªĞÂÏ¢£¬ÊÇ¹Û²âÖµÓëÒ»²½¹À¼ÆµÃµ½µÄ¹Û²âÖµÖ®²î£¬´ËÊ½ÓÉÉÏÒ»Ê±¿Ì×´Ì¬µÄ×îÓÅ»¯¹À¼Æs(t-1)µÃµ½µ±Ç°Ê±¿ÌµÄ×îÓÅ»¯¹À¼Æs(t)
+    %-----2.3 ¸üĞÂÎó²îĞ­·½²î-----
+    P_update(:,:,i)=P_predict(:,:,i) - K(:,:,i)*H*P_predict(:,:,i);%´ËÊ½ÓÉÒ»²½¹À¼ÆµÄĞ­·½²îµÃµ½´ËÊ±¿Ì×îÓÅ»¯¹À¼ÆµÄĞ­·½²î
     
-    %-----2. æ›´æ–°-----
-    %-----2.1 è®¡ç®—å¡å°”æ›¼å¢ç›Š-----
-    K(:,:,i)=P_predict(:,:,i)*H' / (H*P_predict(:,:,i)*H'+R);%K(t)ä¸ºå¡å°”æ›¼å¢ç›Šï¼Œå…¶æ„ä¹‰è¡¨ç¤ºä¸ºçŠ¶æ€è¯¯å·®çš„åæ–¹å·®ä¸é‡æµ‹è¯¯å·®çš„åæ–¹å·®ä¹‹æ¯”(ä¸ªäººè§è§£)
-    %-----2.2 æ›´æ–°çŠ¶æ€-----
-    x_update(:,i)=x_predict(:,i)  +  K(:,:,i) * (z(:,i)-H*x_predict(:,i));%Y(t)-a*c*s(t-1)ç§°ä¹‹ä¸ºæ–°æ¯ï¼Œæ˜¯è§‚æµ‹å€¼ä¸ä¸€æ­¥ä¼°è®¡å¾—åˆ°çš„è§‚æµ‹å€¼ä¹‹å·®ï¼Œæ­¤å¼ç”±ä¸Šä¸€æ—¶åˆ»çŠ¶æ€çš„æœ€ä¼˜åŒ–ä¼°è®¡s(t-1)å¾—åˆ°å½“å‰æ—¶åˆ»çš„æœ€ä¼˜åŒ–ä¼°è®¡s(t)
-    %-----2.3 æ›´æ–°è¯¯å·®åæ–¹å·®-----
-    P_update(:,:,i)=P_predict(:,:,i) - K(:,:,i)*H*P_predict(:,:,i);%æ­¤å¼ç”±ä¸€æ­¥ä¼°è®¡çš„åæ–¹å·®å¾—åˆ°æ­¤æ—¶åˆ»æœ€ä¼˜åŒ–ä¼°è®¡çš„åæ–¹å·®
-    
-    %% æ¨¡æ‹Ÿç»“æœçš„ä¿å­˜
-    x=x_predict(:,i);
+    %% Ä£Äâ½á¹ûµÄ±£´æ
+    x=x_update(:,i);
+    P=inv(P_update(:,:,i));
     result.x=[result.x; x'];
     
-    % æ˜¯å¦åˆ°è¾¾ç›®çš„åœ°
+    % ÊÇ·ñµ½´ïÄ¿µÄµØ
     if norm(x(1:2)-goal')<0.5
         disp('Arrive Goal!!');break;
     end
@@ -118,18 +114,26 @@ for i=2:5000
     %====Animation====
     %hold off;
     ArrowLength=3;
-    % æœºå™¨äºº
+    % »úÆ÷ÈË
     quiver(x(1),x(2),ArrowLength*cos(x(3)),ArrowLength*sin(x(3)),'ok');hold on; %'ok' sets the line without arrow,the start point set to be 'o'
     %plot(result.x(:,1),result.x(:,2),'-b');hold on;
     %     plot(goal(1),goal(2),'*r');hold on;
     %     plot(obstacle(:,1),obstacle(:,2),'*k');hold on;
-    % æ¢ç´¢è½¨è¿¹
-    if ~isempty(traj)
-        for it=1:length(traj(:,1))/5
-            ind=1+(it-1)*5;
-            plot(traj(ind,:),traj(ind+1,:),'*g');hold on;
-        end
-    end
+    
+    % Ì½Ë÷¹ì¼£
+    %     if ~isempty(traj)
+    %         for it=1:length(traj(:,1))/5
+    %             ind=1+(it-1)*5;
+    %             plot(traj(ind,:),traj(ind+1,:),'*g');hold on;
+    %         end
+    %     end
+    
+    % »æÖÆĞ­·½²î¾ØÕó£¨¸ßË¹Ëæ»úÖµ£©
+    uncertain_u=[x(1) x(2)]';
+    uncertain_P=P([1,2],[1,2]);
+    r=chi2inv(0.05,2);%
+    ellipsefig(uncertain_u,uncertain_P,r,1);% »­Ò»°ãÍÖÔ²»òÍÖÇò£º(x-xc)'*P*(x-xc) = r
+    
     %axis(area);
     %grid on;
     drawnow;
@@ -145,7 +149,7 @@ function [u,trajDB]=DynamicWindowApproach(x,model,goal,evalParam,ob,R)
 % Dynamic Window [vmin,vmax,wmin,wmax]
 Vr=CalcDynamicWindow(x,model);
 
-% è¯„ä»·å‡½æ•°çš„è®¡ç®—
+% ÆÀ¼Ûº¯ÊıµÄ¼ÆËã
 [evalDB,trajDB]=Evaluation(x,Vr,goal,ob,R,model,evalParam);
 
 if isempty(evalDB)
@@ -153,17 +157,17 @@ if isempty(evalDB)
     u=[0;0];return;
 end
 
-% å„è¯„ä»·å‡½æ•°æ­£åˆ™åŒ–
+% ¸÷ÆÀ¼Ûº¯ÊıÕıÔò»¯
 evalDB=NormalizeEval(evalDB);
 
-% æœ€ç»ˆè¯„ä»·å‡½æ•°çš„è®¡ç®—
+% ×îÖÕÆÀ¼Ûº¯ÊıµÄ¼ÆËã
 feval=[];
 for id=1:length(evalDB(:,1))
     feval=[feval;evalParam(1:3)*evalDB(id,3:5)'];
 end
 evalDB=[evalDB feval];
 
-[maxv,ind]=max(feval);% æœ€ä¼˜è¯„ä»·å‡½æ•°
+[maxv,ind]=max(feval);% ×îÓÅÆÀ¼Ûº¯Êı
 u=evalDB(ind,1:2)';%
 
 function [evalDB,trajDB]=Evaluation(x,Vr,goal,ob,R,model,evalParam)
@@ -172,13 +176,13 @@ evalDB=[];
 trajDB=[];
 for vt=Vr(1):model(5):Vr(2)
     for ot=Vr(3):model(6):Vr(4)
-        % è½¨è¿¹æ¨æµ‹; å¾—åˆ° xt: æœºå™¨äººå‘å‰è¿åŠ¨åçš„é¢„æµ‹ä½å§¿; traj: å½“å‰æ—¶åˆ» åˆ° é¢„æµ‹æ—¶åˆ»ä¹‹é—´çš„è½¨è¿¹
-        [xt,traj]=GenerateTrajectory(x,vt,ot,evalParam(4),model);  %evalParam(4),å‰å‘æ¨¡æ‹Ÿæ—¶é—´;
-        % å„è¯„ä»·å‡½æ•°çš„è®¡ç®—
+        % ¹ì¼£ÍÆ²â; µÃµ½ xt: »úÆ÷ÈËÏòÇ°ÔË¶¯ºóµÄÔ¤²âÎ»×Ë; traj: µ±Ç°Ê±¿Ì µ½ Ô¤²âÊ±¿ÌÖ®¼äµÄ¹ì¼£
+        [xt,traj]=GenerateTrajectory(x,vt,ot,evalParam(4),model);  %evalParam(4),Ç°ÏòÄ£ÄâÊ±¼ä;
+        % ¸÷ÆÀ¼Ûº¯ÊıµÄ¼ÆËã
         heading=CalcHeadingEval(xt,goal);
         dist=CalcDistEval(xt,ob,R);
         vel=abs(vt);
-        % åˆ¶åŠ¨è·ç¦»çš„è®¡ç®—
+        % ÖÆ¶¯¾àÀëµÄ¼ÆËã
         stopDist=CalcBreakingDist(vel,model);
         if dist>stopDist %
             evalDB=[evalDB;[vt ot heading dist vel]];
@@ -188,7 +192,7 @@ for vt=Vr(1):model(5):Vr(2)
 end
 
 function EvalDB=NormalizeEval(EvalDB)
-% è¯„ä»·å‡½æ•°æ­£åˆ™åŒ–
+% ÆÀ¼Ûº¯ÊıÕıÔò»¯
 if sum(EvalDB(:,3))~=0
     EvalDB(:,3)=EvalDB(:,3)/sum(EvalDB(:,3));
 end
@@ -200,47 +204,47 @@ if sum(EvalDB(:,5))~=0
 end
 
 function [x,traj]=GenerateTrajectory(x,vt,ot,evaldt,model)
-% è½¨è¿¹ç”Ÿæˆå‡½æ•°
-% evaldtï¼šå‰å‘æ¨¡æ‹Ÿæ—¶é—´; vtã€otå½“å‰é€Ÿåº¦å’Œè§’é€Ÿåº¦;
+% ¹ì¼£Éú³Éº¯Êı
+% evaldt£ºÇ°ÏòÄ£ÄâÊ±¼ä; vt¡¢otµ±Ç°ËÙ¶ÈºÍ½ÇËÙ¶È;
 global dt;
 time=0;
-u=[vt;ot];% è¾“å…¥å€¼
-traj=x;% æœºå™¨äººè½¨è¿¹
+u=[vt;ot];% ÊäÈëÖµ
+traj=x;% »úÆ÷ÈË¹ì¼£
 while time<=evaldt
-    time=time+dt;% æ—¶é—´æ›´æ–°
-    x=f(x,u);% è¿åŠ¨æ›´æ–°
+    time=time+dt;% Ê±¼ä¸üĞÂ
+    x=f(x,u);% ÔË¶¯¸üĞÂ
     traj=[traj x];
 end
 
 function stopDist=CalcBreakingDist(vel,model)
-% æ ¹æ®è¿åŠ¨å­¦æ¨¡å‹è®¡ç®—åˆ¶åŠ¨è·ç¦»,è¿™ä¸ªåˆ¶åŠ¨è·ç¦»å¹¶æ²¡æœ‰è€ƒè™‘æ—‹è½¬é€Ÿåº¦ï¼Œä¸ç²¾ç¡®å§ï¼ï¼ï¼
+% ¸ù¾İÔË¶¯Ñ§Ä£ĞÍ¼ÆËãÖÆ¶¯¾àÀë,Õâ¸öÖÆ¶¯¾àÀë²¢Ã»ÓĞ¿¼ÂÇĞı×ªËÙ¶È£¬²»¾«È·°É£¡£¡£¡
 global dt;
 stopDist=0;
 while vel>0
-    stopDist=stopDist+vel*dt;% åˆ¶åŠ¨è·ç¦»çš„è®¡ç®—
+    stopDist=stopDist+vel*dt;% ÖÆ¶¯¾àÀëµÄ¼ÆËã
     vel=vel-model(3)*dt;%
 end
 
 function dist=CalcDistEval(x,ob,R)
-% éšœç¢ç‰©è·ç¦»è¯„ä»·å‡½æ•°
+% ÕÏ°­Îï¾àÀëÆÀ¼Ûº¯Êı
 dist=100;
 for io=1:length(ob(:,1))
     disttmp=norm(ob(io,:)-x(1:2)')-R;
-    if dist>disttmp% ç¦»éšœç¢ç‰©æœ€å°çš„è·ç¦»
+    if dist>disttmp% ÀëÕÏ°­Îï×îĞ¡µÄ¾àÀë
         dist=disttmp;
     end
 end
 
-% éšœç¢ç‰©è·ç¦»è¯„ä»·é™å®šä¸€ä¸ªæœ€å¤§å€¼ï¼Œå¦‚æœä¸è®¾å®šï¼Œä¸€æ—¦ä¸€æ¡è½¨è¿¹æ²¡æœ‰éšœç¢ç‰©ï¼Œå°†å¤ªå æ¯”é‡
+% ÕÏ°­Îï¾àÀëÆÀ¼ÛÏŞ¶¨Ò»¸ö×î´óÖµ£¬Èç¹û²»Éè¶¨£¬Ò»µ©Ò»Ìõ¹ì¼£Ã»ÓĞÕÏ°­Îï£¬½«Ì«Õ¼±ÈÖØ
 if dist>=2*R
     dist=2*R;
 end
 
 function heading=CalcHeadingEval(x,goal)
-% headingçš„è¯„ä»·å‡½æ•°è®¡ç®—
+% headingµÄÆÀ¼Ûº¯Êı¼ÆËã
 
-theta=toDegree(x(3));% æœºå™¨äººæœå‘
-goalTheta=toDegree(atan2(goal(2)-x(2),goal(1)-x(1)));% ç›®æ ‡ç‚¹çš„æ–¹ä½
+theta=toDegree(x(3));% »úÆ÷ÈË³¯Ïò
+goalTheta=toDegree(atan2(goal(2)-x(2),goal(1)-x(1)));% Ä¿±êµãµÄ·½Î»
 
 if goalTheta>theta
     targetTheta=goalTheta-theta;% [deg]
@@ -253,19 +257,19 @@ heading=180-targetTheta;
 function Vr=CalcDynamicWindow(x,model)
 %
 global dt;
-% è½¦å­é€Ÿåº¦çš„æœ€å¤§æœ€å°èŒƒå›´
+% ³µ×ÓËÙ¶ÈµÄ×î´ó×îĞ¡·¶Î§
 Vs=[0 model(1) -model(2) model(2)];
 
-% æ ¹æ®å½“å‰é€Ÿåº¦ä»¥åŠåŠ é€Ÿåº¦é™åˆ¶è®¡ç®—çš„åŠ¨æ€çª—å£
+% ¸ù¾İµ±Ç°ËÙ¶ÈÒÔ¼°¼ÓËÙ¶ÈÏŞÖÆ¼ÆËãµÄ¶¯Ì¬´°¿Ú
 Vd=[x(4)-model(3)*dt x(4)+model(3)*dt x(5)-model(4)*dt x(5)+model(4)*dt];
 
-% æœ€ç»ˆçš„Dynamic Window
+% ×îÖÕµÄDynamic Window
 Vtmp=[Vs;Vd];
 Vr=[max(Vtmp(:,1)) min(Vtmp(:,2)) max(Vtmp(:,3)) min(Vtmp(:,4))];
 
 function x = f(x, u)
 % Motion Model
-% u = [vt; ot];å½“å‰æ—¶åˆ»é‡‡æ ·çš„é€Ÿåº¦ã€è§’é€Ÿåº¦
+% u = [vt; ot];µ±Ç°Ê±¿Ì²ÉÑùµÄËÙ¶È¡¢½ÇËÙ¶È
 global dt;
 A = [1 0 0 0 0
     0 1 0 0 0
