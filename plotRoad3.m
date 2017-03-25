@@ -81,7 +81,10 @@ temp4=[x;y;theta;kappa];
 
 referencepath_xy=[temp1,temp2,temp3,temp4];%,temp5
 plot(referencepath_xy(1,:),referencepath_xy(2,:),'b-.');
-axis equal;
+%axis([0,firstLineEndX,0,30]);
+axis([30,90,-10,30]);%FOR EX1_STRAIGHTLINE
+axis off;
+%axis equal;
 %figure(figCur);%@@@@@
 %plot(referencepath_xy(1,:),referencepath_xy(4,:),'b');hold on;
 end

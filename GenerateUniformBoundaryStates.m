@@ -18,6 +18,6 @@ end
 % I=imread('vehicle.png');
 % b=imrotate(I,-90-180*XInitial(3)/3.14,'nearest');
 % imshow(b, 'XData',[XInitial(1)-1,XInitial(1)+1], 'YData', [XInitial(2)-0.5,XInitial(2)+0.5]);hold on;
-plot(BoundaryStatePairSet(1,:),BoundaryStatePairSet(2,:),'g*');
+% plot(BoundaryStatePairSet(1,:),BoundaryStatePairSet(2,:),'g*');
 end
 

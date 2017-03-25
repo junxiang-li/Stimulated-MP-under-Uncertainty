@@ -10,7 +10,7 @@ if tag == 1
     bb = sqrt(r/D(4));
     t = linspace(0, 2*pi, 60);
     xy = V*[aa*cos(t);bb*sin(t)]; % ×ø±êÐý×ª
-    h = plot(xy(1,:)+xc(1),xy(2,:)+xc(2), 'b-', 'linewidth', 0.2);
+    h = fill(xy(1,:)+xc(1),xy(2,:)+xc(2),[0.8,0.8,0.8], 'linewidth', 0.2);
 else
     aa = sqrt(r/D(1,1));
     bb = sqrt(r/D(2,2));

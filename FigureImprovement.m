@@ -27,7 +27,4 @@ else if strcmp(name,'Curvature')==1
          %print('Curvature','-depsc','-r300');
     end
 end
-
-
-
 end

@@ -1,3 +1,14 @@
+clc;clear;
+t=0:0.01:10;
+lamda=4.3429;
+y1=exp(-t);
+y2=exp(-t/lamda);
+plot(t,y1,'r');hold on;
+plot(t,y2,'b');
+%axis equal;
+grid on;
+set(gca,'XTick',[0:0.5:10]);
+set(gca,'YTick',[0:0.1:1]);
 % clc;clear;
 % parameter=ones(4,1);
 % parameter(1)=parameter_lookup.trajectory_parameter(1,2,1);
@@ -251,15 +262,15 @@
 % g = @(x) 5*sin(x)+5;
 % dmn = -pi:0.001:pi;
 % xeq = dmn(abs(f(dmn) - g(dmn)) < 0.002);
-% % figure(1);
-% % plot(dmn,f(dmn),'b-',dmn,g(dmn),'r--',xeq,f(xeq),'g*');
-% % xlim([-pi pi]);
-% % legend('f(x)', 'g(x)', 'f(x)=g(x)', 'Location', 'SouthEast');
-% % xlabel('x');
-% % title('Example Figure');
-% % print('example', '-dpng', '-r300'); %<-Save as PNG with 300 DPI
-% 
-% % Defaults for this blog post
+% figure(1);
+% plot(dmn,f(dmn),'b-',dmn,g(dmn),'r--',xeq,f(xeq),'g*');
+% xlim([-pi pi]);
+% legend('f(x)', 'g(x)', 'f(x)=g(x)', 'Location', 'SouthEast');
+% xlabel('x');
+% title('Example Figure');
+% print('example', '-dpng', '-r300'); %<-Save as PNG with 300 DPI
+
+% Defaults for this blog post
 % width = 3;     % Width in inches
 % height = 3;    % Height in inches
 % alw = 0.75;    % AxesLineWidth
@@ -292,15 +303,15 @@
 % 
 % % Save the file as PNG
 % print('improvedExample','-dpng','-r300');
-% %print('improvedExample','-dpdf','-r300');
+%print('improvedExample','-dpdf','-r300');
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%axe Function%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % clc;clear;close all;                                                                                                               
-% t=linspace(0,6,300);% 生成曲线的整体离散坐标值t
-% t1=linspace(2.8,3.2,300); % 生成曲线的局部离散坐标值t1                                                                                                                       
-% y=sin(1./[t-3]);% 生成曲线的整体离散函数值y
-% y1=sin(1./[t1-3]); % 生成曲线的局部离散函数值y1                                                                                                                                  
+% t=linspace(0,6,300);% 生成曲线的整体离散坐标�?t
+% t1=linspace(2.8,3.2,300); % 生成曲线的局部离散坐标�?t1                                                                                                                       
+% y=sin(1./[t-3]);% 生成曲线的整体离散函数�?y
+% y1=sin(1./[t1-3]); % 生成曲线的局部离散函数�?y1                                                                                                                                  
 % figure;% 生成新的图形窗口            
-% plot(t,y);axis('equal'); % 绘制整体曲线图                                                                                              
+% plot(t,y);axis('equal'); % 绘制整体曲线�?                                                                                             
 % axes('Position',[0.18,0.62,0.28,0.25]); % 生成子图                                                                             
-% plot(t1,y1); % 绘制局部曲线图                                                                                                                
-% xlim([min(t1),max(t1)]); % 设置坐标轴范围
+% plot(t1,y1); % 绘制�?��曲线�?                                                                                                               
+% xlim([min(t1),max(t1)]); % 设置坐标轴范�?
