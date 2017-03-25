@@ -2,7 +2,7 @@ function [referencepath_xy] = plotRoad2(figSim)
 % This environment depicts only having the straightline in the scene. 
 % 
 global l_width
-l_width=6;
+l_width=4;
 
 %%%%%%%%%%%%%%%%%% Initiation %%%%%%%%%%%%%%%%%%%%%%%%
 firstLineEndX=36;
@@ -15,10 +15,10 @@ firstLineY=l_width/2;
 % circlecenter=[firstLineEndX,radius_outer(1)-l_width/2;
 %     firstLineEndX+2*radius_outer(1),radius_outer(1)-l_width/2];
 
-straightline=[0,-firstLineY;
-    firstLineEndX,-firstLineY;
-    0,firstLineY;
-    firstLineEndX,firstLineY;%the first part line
+straightline=[0,-firstLineY-0.25;
+    firstLineEndX,-firstLineY-0.25;
+    0,firstLineY+0.25;
+    firstLineEndX,firstLineY+0.25;%the first part line %Pay attention:0.5 is for the visual effect
 ];
 
 %%%%%%%%%%%%%%%%%% Plot the Road%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,7 +27,13 @@ for i=1:2:size(straightline)
     plot([straightline(i:i+1,1)],[straightline(i:i+1,2)],'black','LineWidth',2.5);hold on;
 end
 
-%%%%%%%%%%%%%%%%%% Calculate Reference Road %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% Calculate Road  Center%%%%%%%%%%%%%%%%%%%%%%%
+% pointnum=100;
+% x=linspace(0,firstLineEndX,4*pointnum);
+% y=linspace(0,0,4*pointnum);
+% plot(x,y,'b-.');hold on;
+
+%%%%%%%%%%%%%%%%%% Calculate Reference Road(Road Center)%%%%%%%%%%%%%%%%%%%%%%%
 pointnum=100;
 x=linspace(0,firstLineEndX,4*pointnum);
 y=linspace(0,0,4*pointnum);
@@ -43,7 +49,9 @@ temp1=[x;y;theta;kappa];
 
 referencepath_xy=[temp1];%,temp5
 plot(referencepath_xy(1,:),referencepath_xy(2,:),'b-.');hold on;
-axis equal;
+%axis([5,firstLineEndX,-12,12]);
+axis([0,firstLineEndX,-15,15]);%FOR EX1_STRAIGHTLINE
+axis off;
 %figure(figCur);%@@@@@
 %plot(referencepath_xy(1,:),referencepath_xy(4,:),'b');hold on;
 end

@@ -1,4 +1,4 @@
-function state_terminal=state_calculate(parameter,state_initial)
+function [state_terminal]=state_calculate(parameter,state_initial)
 %parameter=[   -1.0181    0.0318   -0.0001 -197.1080];
 %state_initial=[   40.0000   -0.3571         0         0];
 
@@ -16,7 +16,7 @@ else
     steps=floor(abs(parameter(4))/s_step);
 end
 
-%%%ͨ���ֵķ�ʽ���ĩ��״̬��
+%%%ͨ���ֵķ�ʽ���ĩ��״̬��?
 if steps==0
     state_terminal=[x,y,theta,k_curve];
 else
@@ -28,8 +28,6 @@ else
         y(i)=y(i-1)+sin(theta(i))*s_step;
     end
     state_terminal=[x(steps), y(steps),theta(steps),k_curve(steps)];
-    
-
 end
 % plot(s,k_curve);
 % hold on;

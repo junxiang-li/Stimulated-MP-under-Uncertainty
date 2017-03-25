@@ -1,10 +1,10 @@
 
 function [parameter,state_terminal1]=Parametric_Trajectory_Generation(parameter_previous,state_initial,state_terminal,parameter_inherit_flag)
 
-% parmeter_previous=[0,0,0,5];
-% state_initial=[0,0,0,0];
-% state_terminal=[5,0,-0.1745,0]
-% parameter_inherit_flag=0;
+%  parmeter_previous=[0,0,0,5];
+%  state_initial=[0,0,0,0];
+%  state_terminal=[5,0,-0.1745,0]
+%  parameter_inherit_flag=0;
 %%%%%%���ó�ʼ״̬%%%%%%%
 %%%%%%���賵��״̬Ϊ4D״̬�ռ�(x ,y ,theta ,k_curve),(x,y)Ϊλ�ã�thetaΪ����ǣ�k_curveΪ����
 global rotate_theta  %����ȫ�ֱ���_����ʼ����ǲ�Ϊ��ʱ����ô�����Ҫ��ת�ĽǶȾ�Ϊrotate_theta
@@ -13,18 +13,18 @@ global rotate_theta  %����ȫ�ֱ���_����ʼ����ǲ�
 %     state_initial=[0 0 0 0];
 %     x_temp=state_terminal(1);
 %     y_temp=state_terminal(2);
-%     state_terminal(1)=x_temp*cos(rotate_theta)+y_temp*sin(rotate_theta);%��ʼ����ǲ�Ϊ��ʱ����Ҫ���Ƚ�����ת
+%     state_terminal(1)=x_temp*cos(rotate_theta)+y_temp*sin(rotate_theta);%��ʼ����ǲ�Ϊ��ʱ����Ҫ���Ƚ������?
 %     state_terminal(2)=-x_temp*sin(rotate_theta)+y_temp*cos(rotate_theta);
 %     state_terminal(3)=state_terminal(3)-rotate_theta;
 % end
 
 k_curve(1)=state_initial(4);
 yacobian_matrix=zeros(4,4);%��ʼ��yacobian����4*4�ķ���
-parameter_adj=[1e-6, 1e-6,1e-6,1e-3*5]; % �������yacobian����ʱ�Ĳ���仯������
+parameter_adj=[1e-6, 1e-6,1e-6,1e-3*5]; % �������yacobian����ʱ�Ĳ���仯������?
 state_error_weight=[50 50 50 50]; % ����״̬����Ȩ�أ��ж��Ƿ�������������
-max_iteration=6;   %���������Ĵ�������˵�����û�������Ļ�����ô����Ϊ���޽⡣
+max_iteration=7;   %���������Ĵ�������˵�����û�������Ļ�����ô����Ϊ���޽�?
 
-%%%%%%%%�Բ�����г�ʼ��%%%%%%%%%%%%%%
+%%%%%%%%�Բ�����г�ʼ��?%%%%%%%%%%%%%
 x_terminal=state_terminal(1);
 y_terminal=state_terminal(2);
 theta_terminal=state_terminal(3);
@@ -38,20 +38,29 @@ k_curve_terminal=state_terminal(4);
 %     parameter_initial=[a_initial b_initial c_initial s_initial];%��ʼ������
 %    parameter=parameter_initial;
 parameter=parameter_previous;
-
+Q(:,1)=parameter_previous;
 for k=1:max_iteration
-    state_terminal1=state_calculate(parameter,state_initial);
-    state_error=state_terminal-state_terminal1;%����ĩ��״̬���
+    [state_terminal1]=state_calculate(parameter,state_initial);
+    state_error=state_terminal-state_terminal1;%����ĩ��״̬���?
     
     index=k;
     state_error_1=abs(state_error_weight(1)*state_error(1));
     state_error_2=abs(state_error_weight(2)*state_error(2));
     state_error_3=abs(state_error_weight(3)*state_error(3));
     state_error_4=0*abs(state_error_weight(4)*state_error(4));
-    if (state_error_1)<1&&(state_error_2<1)&&(state_error_3<1)&&(state_error_4<1)%%���������ֵ
+    if (state_error_1)<1&&(state_error_2<1)&&(state_error_3<1)&&(state_error_4<1)%%����������?
         %state_error=state_terminal-state_terminal_1 ; %%%��ʼ����õ�״̬���
         %trajectory_curve_draw(parameter,state_initial); %���û����ߵĺ���
         break; %�����һ��forѭ��
+    end
+    if(norm(state_error)>10^2)
+        if(k>2)
+            parameter=Q(:,k-2);
+        else
+            parameter=Q(:,1);
+        end
+        [state_terminal1]=state_calculate(parameter,state_initial);
+        break;
     end
     state_terminal_current = state_terminal1;
     delt_state_teminal_current = state_terminal-state_terminal_current;
@@ -60,14 +69,14 @@ for k=1:max_iteration
     for i=1:length(parameter)
         %%%%%%%%%%%����һ
         parameter_1=parameter;
-        parameter_1(i)=parameter(i)+parameter_adj(i);   %��ÿ���������΢����ͨ����������������ȷ�ı仯���ơ�
+        parameter_1(i)=parameter(i)+parameter_adj(i);   %��ÿ���������΢����ͨ����������������ȷ�ı仯���ơ�?
         %[Q,state_terminal1]=FirstDerivatives(parameter_1,state_initial);
-        state_terminal1=state_calculate(parameter_1,state_initial);
+        [state_terminal1]=state_calculate(parameter_1,state_initial);
         state_error=state_terminal-state_terminal1;
-        current = (state_error - delt_state_teminal_current)./parameter_adj(i);%������ֵ�������ƫ��
+        current = (state_error - delt_state_teminal_current)./parameter_adj(i);%������ֵ�������ƫ��?
         yacobian_matrix(1:4,i)=current;
     end
-    state_error=delt_state_teminal_current;  %�۲������У�״̬���Ľ��
+    state_error=delt_state_teminal_current;  %�۲������У�״̬���Ľ��?
     delta_parameter=-inv(yacobian_matrix)*state_error';  %%�����仯��С
     parameter=delta_parameter'+parameter; %�õ��µĲ���
     Q(:,k)=parameter;
