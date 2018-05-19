@@ -4,9 +4,9 @@
 # Introduction
 -------
 
-本程序是在Prescan平台上开发的自主驾驶运动预测与规划方法Demo
+This demo is built for the motion prediction and motion planning of Intelligent Vehicles (IVs) in the platform of Prescan ([The introduction of Prescan](https://tass.plm.automation.siemens.com/prescan)).
 
-Prescan版本是8.0(只能在8.0以上版本才能打开pex文件)，matlab为2016b
+The version of Prescan we used is 8.0, and matlab is 2016b. Note that the pex file can only be opened at Prescan V8.0+.
 
 # Description
 -------
@@ -14,11 +14,11 @@ Prescan版本是8.0(只能在8.0以上版本才能打开pex文件)，matlab为20
 
     -pex文件
     
-    -Trajectoies文件夹：用以保存所有在prescan中**预先**设定的轨迹
+    - Trajectoies文件夹：用以保存所有在prescan中**预先**设定的轨迹
     
 * Simulink建模文件
 
-    -_cs.mdl文件（其他为自动生成的自动保存文件）
+    - _cs.mdl文件（其他为自动生成的自动保存文件）
     
 * Matlab程序
 
@@ -45,7 +45,7 @@ Prescan版本是8.0(只能在8.0以上版本才能打开pex文件)，matlab为20
 
 # FeedBack
 -------
-If you found any bug or have any suggestion, please do file issues. I am graceful for any feedback and will do my best to improve this package.
+If you find any bugs or have any suggestions, please contact me or modify directly. I am thankful for your feedback and will definitely improve the program. At the same time, I would like to discuss/learn state-of-the-art methods to make planning more smooth and human-like.
 
 # License
 -------
