@@ -41,7 +41,7 @@ Prescan版本是8.0(只能在8.0以上版本才能打开pex文件)，matlab为20
 
 除bug：在原程序的基础上，对simulink文件中速度规划模块进行了修改，利用Pathfollower对路径进行跟踪；
 
-[CHANGELOG](https://github.com/meolu/walle-web/releases)
+~~[CHANGELOG]~~
 
 # FeedBack
 -------
